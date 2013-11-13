@@ -10,6 +10,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QDebug>
+#include <QList>
 
 #define LOG qDebug() << "appmenu-qt:" << __FUNCTION__ << __LINE__
 #define LOG_VAR(x) qDebug() << "appmenu-qt:" << __FUNCTION__ << __LINE__ << #x ":" << x
@@ -46,7 +47,7 @@ private:
 };
 
 
-
+QList<QMenuBar *> globalMenuBars;
 
 
 ///////////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ AppMenuPlatformMenuBar::removeMenu(QPlatformMenu *menu)
 void 
 AppMenuPlatformMenuBar::syncMenu(QPlatformMenu *menuItem)
 {
+    handleReparent(m_window);
     return;
 }
 
@@ -91,6 +93,7 @@ AppMenuPlatformMenuBar::handleReparent(QWindow *newParentWindow)
 
     m_window = newParentWindow;
     QWidget *window = QWidget::find(m_window->winId());
+
     m_menubar = window->findChild<QMenuBar *>();
     if (!m_menubar) {
         // Something went wrong, this shouldn't have happened
@@ -98,9 +101,17 @@ AppMenuPlatformMenuBar::handleReparent(QWindow *newParentWindow)
         return;
     }
 
+    if (globalMenuBars.indexOf(m_menubar) != -1) {
+        WARN << "The given QMenuBar is already registered by appmenu-qt5, skipping";
+        m_menubar = 0;
+        return;
+    }
+
     delete m_adapter;
     m_adapter = new MenuBarAdapter(m_menubar, m_objectPath);
-    m_adapter->registerWindow();
+    if (m_adapter->registerWindow()) {
+        globalMenuBars.push_back(m_menubar);
+    }
 }
 
 QPlatformMenu *
@@ -123,12 +134,18 @@ MenuBarAdapter::~MenuBarAdapter()
 {
     delete m_exporter;
     m_exporter = 0;
+    globalMenuBars.removeAll(m_menuBar);
 }
 
 bool
 MenuBarAdapter::registerWindow()
 {
     static com::canonical::AppMenu::Registrar *registrar = 0;
+
+    if (globalMenuBars.indexOf(m_menuBar) >= 0) {
+        WARN << "Already present, error!";
+        return false;
+    }
 
     if (!m_menuBar->window()) {
         WARN << "No parent for this menubar";
@@ -144,6 +161,12 @@ MenuBarAdapter::registerWindow()
 
     if (!registrar || !registrar->isValid())
         return false;
+
+    Q_FOREACH(QAction *action, m_menuBar->actions()) {
+                if (!action->isSeparator()) {
+                    WARN << action->text();
+                }
+    }
 
     if (!m_exporter)
         m_exporter = new DBusMenuExporter(m_objectPath, (QMenu *)m_menuBar);
