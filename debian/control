@@ -1,0 +1,27 @@
+Source: appmenu-qt5
+Section: kde
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Build-Depends: cmake,
+               debhelper (>= 9),
+               libdbusmenu-qt5-dev,
+               qtbase5-dev (>= 5.0.1+dfsg-0ubuntu4~),
+               pkg-config,
+Standards-Version: 3.9.3
+Homepage: https://launchpad.net/appmenu-qt5
+Vcs-Bzr: lp:appmenu-qt5
+
+Package: appmenu-qt5
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Suggests: libqt5core5,
+          libqt5dbus5,
+          libqt5gui5,
+          libqt5widgets5,
+Description: application menu for Qt5
+ appmenu provides you with an integrated application menu in your
+ global menu bar
+ .
+ appmenu-qt5 will work for applications designed for Qt and KDE
+ This is the Qt5 version

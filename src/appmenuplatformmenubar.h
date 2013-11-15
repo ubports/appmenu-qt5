@@ -41,6 +41,8 @@ public:
     AppMenuPlatformThemePlugin(QObject *parent = 0);
 
     virtual QPlatformTheme *create(const QString &key, const QStringList &paramList);
+
+    static const char *name;
 };
 
 QT_END_NAMESPACE

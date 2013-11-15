@@ -1,6 +1,9 @@
 #include "appmenuplatformmenubar.h"
 #include "registrar_interface.h"
 
+// Ugly, but sadly we need to use private headers for desktop-theme related classes
+#include <QtPlatformSupport/5.0.2/QtPlatformSupport/private/qgenericunixthemes_p.h>
+
 #include <dbusmenuexporter.h>
 
 #include <QWindow>
@@ -35,8 +38,6 @@ public:
     ~MenuBarAdapter();
 
     bool registerWindow();
-    void popupAction(QAction*);
-    void setAltPressed(bool pressed);
     void resetRegisteredWinId();
 
 private:
@@ -66,18 +67,22 @@ AppMenuPlatformMenuBar::~AppMenuPlatformMenuBar()
 void 
 AppMenuPlatformMenuBar::insertMenu(QPlatformMenu *menu, QPlatformMenu *before)
 {
+    Q_UNUSED(menu);
+    Q_UNUSED(before);
     return;
 }
 
 void 
 AppMenuPlatformMenuBar::removeMenu(QPlatformMenu *menu)
 {
+    Q_UNUSED(menu);
     return;
 }
 
 void 
 AppMenuPlatformMenuBar::syncMenu(QPlatformMenu *menuItem)
 {
+    Q_UNUSED(menuItem);
     handleReparent(m_window);
     return;
 }
@@ -117,6 +122,7 @@ AppMenuPlatformMenuBar::handleReparent(QWindow *newParentWindow)
 QPlatformMenu *
 AppMenuPlatformMenuBar::menuForTag(quintptr tag) const
 {
+    Q_UNUSED(tag);
     return NULL;
 }
 
@@ -184,60 +190,97 @@ MenuBarAdapter::resetRegisteredWinId()
     m_registeredWinId = 0;
 }
 
-void
-MenuBarAdapter::popupAction(QAction* action)
-{
-    m_exporter->activateAction(action);
-}
-
-void
-MenuBarAdapter::setAltPressed(bool pressed)
-{
-    // m_exporter may be 0 if the menubar is empty.
-    if (m_exporter) {
-        m_exporter->setStatus(pressed ? "notice" : "normal");
-    }
-}
-
 
 ///////////////////////////////////////////////////////////
-class AppMenuPlatformTheme : public QPlatformTheme
+
+/*
+ * The GnomeAppMenuPlatformTheme is a platform theme providing the platform
+ * menubar functionality with the Qt5 QGnomeTheme look
+ */
+class GnomeAppMenuPlatformTheme : public QGnomeTheme
 {
 public:
-    virtual QPlatformMenuItem* createPlatformMenuItem() const;
-    virtual QPlatformMenu* createPlatformMenu() const;
+    virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
+    virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
 };
 
 
-QPlatformMenuItem *
-AppMenuPlatformTheme::createPlatformMenuItem() const
-{
-    return 0;
-}
-
-QPlatformMenu *
-AppMenuPlatformTheme::createPlatformMenu() const
-{
-    return 0;
-}
-
 QPlatformMenuBar *
-AppMenuPlatformTheme::createPlatformMenuBar() const
+GnomeAppMenuPlatformTheme::createPlatformMenuBar() const
 {
     return new AppMenuPlatformMenuBar();
 }
 
 
 ///////////////////////////////////////////////////////////
+
+/*
+ * The KdeAppMenuPlatformTheme is a platform theme providing the platform
+ * menubar functionality with the Qt5 QKdeTheme look
+ */
+class KdeAppMenuPlatformTheme : public QKdeTheme
+{
+public:
+    KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion);
+    virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
+    virtual QPlatformMenu* createPlatformMenu() const { return 0; }
+    virtual QPlatformMenuBar* createPlatformMenuBar() const;
+};
+
+
+KdeAppMenuPlatformTheme::KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion)
+    : QKdeTheme(kdeHome, kdeVersion)
+{
+}
+
+QPlatformMenuBar *
+KdeAppMenuPlatformTheme::createPlatformMenuBar() const
+{
+    return new AppMenuPlatformMenuBar();
+}
+
+
+///////////////////////////////////////////////////////////
+const char *AppMenuPlatformThemePlugin::name = "appmenu-qt5";
+
 AppMenuPlatformThemePlugin::AppMenuPlatformThemePlugin(QObject *parent)
 {
+    Q_UNUSED(parent);
 }
 
 QPlatformTheme *
 AppMenuPlatformThemePlugin::create(const QString &key, const QStringList &paramList)
 {
-    return new AppMenuPlatformTheme();
+    if (key.compare(QLatin1String(AppMenuPlatformThemePlugin::name), Qt::CaseInsensitive))
+        return 0;
+
+    if (paramList.indexOf("kde") >= 0) {
+        // This check is copy-pasted from the Qt5 source code
+        // We need to determine the version number of KDE and the kde home dir
+        const QByteArray kdeVersionBA = qgetenv("KDE_SESSION_VERSION");
+        const int kdeVersion = kdeVersionBA.toInt();
+        if (kdeVersion >= 4) {
+            const QString kdeHomePathVar = QString::fromLocal8Bit(qgetenv("KDEHOME"));
+            if (!kdeHomePathVar.isEmpty())
+                return new KdeAppMenuPlatformTheme(kdeHomePathVar, kdeVersion);
+
+            const QString kdeVersionHomePath = QDir::homePath() + QStringLiteral("/.kde") + QLatin1String(kdeVersionBA);
+            if (QFileInfo(kdeVersionHomePath).isDir())
+                return new KdeAppMenuPlatformTheme(kdeVersionHomePath, kdeVersion);
+
+            const QString kdeHomePath = QDir::homePath() + QStringLiteral("/.kde");
+            if (QFileInfo(kdeHomePath).isDir())
+                return new KdeAppMenuPlatformTheme(kdeHomePath, kdeVersion);
+
+            WARN << "Unable to determine KDEHOME, falling back to the gnome theme";
+        }
+        else {
+            WARN << "KDE version too old or cannot be properly identified, "
+                "falling back to the gnome theme";
+        }
+    }
+    return new GnomeAppMenuPlatformTheme();
 }
 
 
