@@ -254,6 +254,7 @@ AppMenuPlatformThemePlugin::create(const QString &key, const QStringList &paramL
     if (key.compare(QLatin1String(AppMenuPlatformThemePlugin::name), Qt::CaseInsensitive))
         return 0;
 
+#ifndef QKDETHEME_STILL_PRIVATE
     if (paramList.indexOf("kde") >= 0) {
         // This check is copy-pasted from the Qt5 source code
         // We need to determine the version number of KDE and the kde home dir
@@ -279,6 +280,7 @@ AppMenuPlatformThemePlugin::create(const QString &key, const QStringList &paramL
                 "falling back to the gnome theme";
         }
     }
+#endif
     return new GnomeAppMenuPlatformTheme();
 }
 
