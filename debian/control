@@ -5,9 +5,10 @@ Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
                debhelper (>= 9),
                libdbusmenu-qt5-dev,
-               qtbase5-dev (>= 5.0.1+dfsg-0ubuntu4~),
+               qtbase5-dev (>= 5.0.2+dfsg1-7ubuntu10),
+               qtbase5-dev (<< 5.1),
                pkg-config,
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: https://launchpad.net/appmenu-qt5
 Vcs-Bzr: lp:appmenu-qt5
 
@@ -15,7 +16,8 @@ Package: appmenu-qt5
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
-Suggests: libqt5core5,
+Suggests: libqt5core5 (>= 5.0.2+dfsg1-7ubuntu10),
+          libqt5core5 (<< 5.1),
           libqt5dbus5,
           libqt5gui5,
           libqt5widgets5,

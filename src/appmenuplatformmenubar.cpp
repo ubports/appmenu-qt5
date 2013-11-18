@@ -23,7 +23,6 @@ QT_BEGIN_NAMESPACE
 
 static const char* REGISTRAR_SERVICE = "com.canonical.AppMenu.Registrar";
 static const char* REGISTRAR_PATH    = "/com/canonical/AppMenu/Registrar";
-static const char* REGISTRAR_IFACE   = "com.canonical.AppMenu.Registrar";
 
 
 /*
