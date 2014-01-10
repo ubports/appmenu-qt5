@@ -1,9 +1,9 @@
 #ifndef APPMENUPLATFORMMENUBAR_H
 #define APPMENUPLATFORMMENUBAR_H
 
-#include <QtGui/5.0.2/QtGui/qpa/qplatformmenu.h>
-#include <QtGui/5.0.2/QtGui/qpa/qplatformtheme.h>
-#include <QtGui/5.0.2/QtGui/qpa/qplatformthemeplugin.h>
+#include <qpa/qplatformmenu.h>
+#include <qpa/qplatformtheme.h>
+#include <qpa/qplatformthemeplugin.h>
 
 class QMenuBar;
 class QWindow;

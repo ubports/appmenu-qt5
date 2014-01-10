@@ -2,7 +2,7 @@
 #include "registrar_interface.h"
 
 // Ugly, but sadly we need to use private headers for desktop-theme related classes
-#include <QtPlatformSupport/5.0.2/QtPlatformSupport/private/qgenericunixthemes_p.h>
+#include <private/qgenericunixthemes_p.h>
 
 #include <dbusmenuexporter.h>
 
@@ -214,6 +214,7 @@ GnomeAppMenuPlatformTheme::createPlatformMenuBar() const
 
 ///////////////////////////////////////////////////////////
 
+#ifndef QKDETHEME_STILL_PRIVATE
 /*
  * The KdeAppMenuPlatformTheme is a platform theme providing the platform
  * menubar functionality with the Qt5 QKdeTheme look
@@ -238,6 +239,7 @@ KdeAppMenuPlatformTheme::createPlatformMenuBar() const
 {
     return new AppMenuPlatformMenuBar();
 }
+#endif
 
 
 ///////////////////////////////////////////////////////////

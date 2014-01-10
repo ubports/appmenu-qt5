@@ -8,7 +8,7 @@ Build-Depends: cmake,
                qtbase5-dev (>= 5.0.2+dfsg1-7ubuntu10),
                qtbase5-dev (<< 5.1),
                pkg-config,
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: https://launchpad.net/appmenu-qt5
 Vcs-Bzr: lp:appmenu-qt5
 
