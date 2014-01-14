@@ -2,9 +2,15 @@ Source: appmenu-qt5
 Section: kde
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-Build-Depends: cmake,
-               debhelper (>= 9),
+Build-Depends: debhelper (>= 9),
                libdbusmenu-qt5-dev,
+               libgles2-mesa-dev,
+               libglib2.0-dev,
+               libfreetype6-dev,
+               libfontconfig1-dev,
+               libudev-dev,
+               libxrender-dev,
+               qt5-default,
                qtbase5-dev,
                qtbase5-private-dev,
                pkg-config,
