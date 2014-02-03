@@ -30,7 +30,7 @@ Suggests: libqt5core5,
           libqt5gui5,
           libqt5widgets5,
 Description: application menu for Qt5
- appmenu provides you with an integrated application menu in your
- global menu bar
+ appmenu provides you with an integrated application menu in your global
+ menu bar. It functions as a QPA platformtheme plugin.
  .
- appmenu-qt5 will work for applications designed for Qt5 and KDE
+ appmenu-qt5 will work for applications designed for Qt5

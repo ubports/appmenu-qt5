@@ -8,3 +8,8 @@ QT_QPA_PLATFORMTHEME=appmenu-qt5
 
 Now every Qt5 application that is started in the environment will export its
 menu through DBus.
+
+The source also provides a profile.d script that sets the environment to enable
+appmenu-qt5 as the platformtheme by default. To install this script, simply
+run `qmake CONFIG+=enable-by-default` when configuring the source before
+building.
