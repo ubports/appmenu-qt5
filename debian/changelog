@@ -1,5 +1,26 @@
-appmenu-qt5 (0.3.0-0ubuntu1) UNRELEASED; urgency=low
+appmenu-qt5 (0.3.0+14.04.20140305-0ubuntu1) trusty; urgency=low
 
+  [ Łukasz 'sil2100' Zemczak ]
   * Initial release.
+  * Initial version
+  * Fix in a very naiive way the case when a selected, already exported
+    menu wants to be re-exported - which causes problems in dbusmenu
+  * Enable Gnome and KDE theme look and feel when using appmenu-qt5 -
+    it's imperfect, but this approach is the sanest one. For KDE to work
+    we need to distropatch Qt5 into making one of the constructors
+    public. Also, add basic packaging
+  * Enable the possibility of disabling the KDE theme in case we don't
+    have the distro-patch in
+  * Fix header inclusion, bump debian standard
+  * Add copyright headers, add README, fix description and tweak deps
+  * Add profile.d files that would export the QT_QPA_PLATFORMTHEME
+    variable to enable appmenu-qt5 by default on the installed system -
+    if needed
+  * Remove leftover define from debugging
+  * Fix the dependencies
+  * Tweak the descriptions and README a bit
 
- -- Łukasz 'sil2100' Zemczak <lukasz.zemczak@canonical.com>  Wed, 13 Nov 2013 19:48:53 +0100
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 05 Mar 2014 13:19:41 +0000
