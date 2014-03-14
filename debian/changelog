@@ -1,3 +1,10 @@
+appmenu-qt5 (0.3.0+14.04.20140314-0ubuntu1) trusty; urgency=low
+
+  [ Łukasz 'sil2100' Zemczak ]
+  * Fix copyright mischief, add --fail-missing
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 14 Mar 2014 15:04:01 +0000
+
 appmenu-qt5 (0.3.0+14.04.20140305-0ubuntu1) trusty; urgency=low
 
   [ Łukasz 'sil2100' Zemczak ]
