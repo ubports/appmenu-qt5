@@ -5,7 +5,7 @@
 export DPKG_GENSYMBOLS_CHECK_LEVEL=4
 
 %:
-	dh $@
+	dh $@ --fail-missing
 
 override_dh_auto_configure:
 	qmake CONFIG+=enable-by-default
