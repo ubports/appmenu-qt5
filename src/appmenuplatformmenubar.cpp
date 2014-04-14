@@ -32,6 +32,12 @@
 #include <QMenu>
 #include <QDebug>
 #include <QList>
+#include <QVariant>
+
+#undef signals // Needed to make sure we can include gtk.h
+#include <gtk/gtk.h>
+#include <X11/Xlib.h>
+
 
 #define LOG qDebug() << "appmenu-qt:" << __FUNCTION__ << __LINE__
 #define LOG_VAR(x) qDebug() << "appmenu-qt:" << __FUNCTION__ << __LINE__ << #x ":" << x
@@ -210,6 +216,17 @@ MenuBarAdapter::resetRegisteredWinId()
 
 ///////////////////////////////////////////////////////////
 
+/* Helper function, as copy-pasted from Qt 5.2.1 gtk2 platformthemeplugin */
+static QString gtkSetting(const gchar *propertyName)
+{
+    GtkSettings *settings = gtk_settings_get_default();
+    gchararray value;
+    g_object_get(settings, propertyName, &value, NULL);
+    QString str = QString::fromUtf8(value);
+    g_free(value);
+    return str;
+}
+
 /*
  * The GnomeAppMenuPlatformTheme is a platform theme providing the platform
  * menubar functionality with the Qt5 QGnomeTheme look
@@ -217,10 +234,34 @@ MenuBarAdapter::resetRegisteredWinId()
 class GnomeAppMenuPlatformTheme : public QGnomeTheme
 {
 public:
+    GnomeAppMenuPlatformTheme();
     virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
     virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
+
+    virtual QVariant themeHint(QPlatformTheme::ThemeHint hint) const;
 };
+
+
+GnomeAppMenuPlatformTheme::GnomeAppMenuPlatformTheme()
+    : QGnomeTheme()
+{
+    int (*oldErrorHandler)(Display *, XErrorEvent *) = XSetErrorHandler(NULL);
+    gtk_init(0, 0);
+    XSetErrorHandler(oldErrorHandler);
+}
+
+QVariant GnomeAppMenuPlatformTheme::themeHint(QPlatformTheme::ThemeHint hint) const
+{
+    switch (hint) {
+        case QPlatformTheme::SystemIconThemeName:
+            return QVariant(gtkSetting("gtk-icon-theme-name"));
+        case QPlatformTheme::SystemIconFallbackThemeName:
+            return QVariant(gtkSetting("gtk-fallback-icon-theme"));
+        default:
+            return QGnomeTheme::themeHint(hint);
+    }
+}
 
 
 QPlatformMenuBar *

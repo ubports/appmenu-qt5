@@ -8,7 +8,7 @@ QT += core-private gui-private platformsupport-private dbus widgets
 DBUS_INTERFACES += com.canonical.AppMenu.Registrar.xml
 
 CONFIG += X11 link_pkgconfig debug
-PKGCONFIG += dbusmenu-qt5
+PKGCONFIG += dbusmenu-qt5 gtk+-2.0
 DESTDIR = ./
 
 HEADERS += \
