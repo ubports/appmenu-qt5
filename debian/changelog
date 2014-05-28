@@ -1,3 +1,9 @@
+appmenu-qt5 (0.3.0+14.10.20140528-0ubuntu1) utopic; urgency=low
+
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 28 May 2014 06:24:03 +0000
+
 appmenu-qt5 (0.3.0+14.04.20140415-0ubuntu1) trusty; urgency=low
 
   [ Łukasz 'sil2100' Zemczak ]
