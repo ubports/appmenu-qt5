@@ -1,3 +1,11 @@
+appmenu-qt5 (0.3.0+14.10.20140926-0ubuntu1) utopic; urgency=low
+
+  [ Dmitry Shachnev ]
+  * Do nothing if AppMenu is not available, or UBUNTU_MENUPROXY is set
+    to 0 or empty string. (LP: #1362104)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 26 Sep 2014 09:04:23 +0000
+
 appmenu-qt5 (0.3.0+14.10.20140528-0ubuntu1) utopic; urgency=low
 
   * New rebuild forced
