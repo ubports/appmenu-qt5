@@ -49,6 +49,14 @@ static const char* REGISTRAR_SERVICE = "com.canonical.AppMenu.Registrar";
 static const char* REGISTRAR_PATH    = "/com/canonical/AppMenu/Registrar";
 
 
+bool useGlobalMenu() {
+    bool haveAppMenu = QDBusConnection::sessionBus().interface()->isServiceRegistered(REGISTRAR_SERVICE).value();
+    QByteArray menuProxy = qgetenv("UBUNTU_MENUPROXY");
+    bool menuProxyIsGood = menuProxy.isNull() ||
+                           (!menuProxy.isEmpty() && menuProxy.at(0) != '0');
+    return haveAppMenu && menuProxyIsGood;
+}
+
 /*
  * The menubar adapter communicates over DBus with the menubar renderer.
  * It is responsible for registering windows to it and exposing their menubars
@@ -267,7 +275,11 @@ QVariant GnomeAppMenuPlatformTheme::themeHint(QPlatformTheme::ThemeHint hint) co
 QPlatformMenuBar *
 GnomeAppMenuPlatformTheme::createPlatformMenuBar() const
 {
-    return new AppMenuPlatformMenuBar();
+    if (useGlobalMenu()) {
+        return new AppMenuPlatformMenuBar();
+    } else {
+        return QGnomeTheme::createPlatformMenuBar();
+    }
 }
 
 
@@ -296,7 +308,11 @@ KdeAppMenuPlatformTheme::KdeAppMenuPlatformTheme(const QString &kdeHome, int kde
 QPlatformMenuBar *
 KdeAppMenuPlatformTheme::createPlatformMenuBar() const
 {
-    return new AppMenuPlatformMenuBar();
+    if (useGlobalMenu()) {
+        return new AppMenuPlatformMenuBar();
+    } else {
+        return QKdeTheme::createPlatformMenuBar();
+    }
 }
 #endif
 
