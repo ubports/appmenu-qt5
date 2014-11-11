@@ -1,3 +1,13 @@
+appmenu-qt5 (0.3.0+15.04.20141111-0ubuntu1) vivid; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Timo Jyrinki ]
+  * Add libmtdev-dev build dependency (LP: #1379152) (LP: #1379152)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 11 Nov 2014 06:03:20 +0000
+
 appmenu-qt5 (0.3.0+14.10.20140926-0ubuntu1) utopic; urgency=low
 
   [ Dmitry Shachnev ]
