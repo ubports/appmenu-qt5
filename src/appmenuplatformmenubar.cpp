@@ -293,17 +293,22 @@ GnomeAppMenuPlatformTheme::createPlatformMenuBar() const
 class KdeAppMenuPlatformTheme : public QKdeTheme
 {
 public:
-    KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    KdeAppMenuPlatformTheme(const QStringList &kdeDirs, int kdeVersion)
+        : QKdeTheme(kdeDirs, kdeVersion)
+    {
+    }
+#else
+    KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion)
+        : QKdeTheme(kdeHome, kdeVersion)
+    {
+    }
+#endif
     virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
     virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
 };
 
-
-KdeAppMenuPlatformTheme::KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion)
-    : QKdeTheme(kdeHome, kdeVersion)
-{
-}
 
 QPlatformMenuBar *
 KdeAppMenuPlatformTheme::createPlatformMenuBar() const
@@ -375,7 +380,7 @@ AppMenuPlatformThemePlugin::create(const QString &key, const QStringList &paramL
 
             kdeDirs.removeDuplicates();
             if (!kdeDirs.isEmpty()) {
-                return new QKdeTheme(kdeDirs, kdeVersion);
+                return new KdeAppMenuPlatformTheme(kdeDirs, kdeVersion);
             }
             else {
                 qWarning("%s: Unable to determine KDE dirs", Q_FUNC_INFO);
