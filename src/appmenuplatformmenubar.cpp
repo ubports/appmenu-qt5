@@ -293,17 +293,22 @@ GnomeAppMenuPlatformTheme::createPlatformMenuBar() const
 class KdeAppMenuPlatformTheme : public QKdeTheme
 {
 public:
-    KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    KdeAppMenuPlatformTheme(const QStringList &kdeDirs, int kdeVersion)
+        : QKdeTheme(kdeDirs, kdeVersion)
+    {
+    }
+#else
+    KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion)
+        : QKdeTheme(kdeHome, kdeVersion)
+    {
+    }
+#endif
     virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
     virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
 };
 
-
-KdeAppMenuPlatformTheme::KdeAppMenuPlatformTheme(const QString &kdeHome, int kdeVersion)
-    : QKdeTheme(kdeHome, kdeVersion)
-{
-}
 
 QPlatformMenuBar *
 KdeAppMenuPlatformTheme::createPlatformMenuBar() const
@@ -338,6 +343,50 @@ AppMenuPlatformThemePlugin::create(const QString &key, const QStringList &paramL
         const QByteArray kdeVersionBA = qgetenv("KDE_SESSION_VERSION");
         const int kdeVersion = kdeVersionBA.toInt();
         if (kdeVersion >= 4) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+            // Determine KDE prefixes in the following priority order:
+            // - KDEHOME and KDEDIRS environment variables
+            // - ~/.kde(<version>)
+            // - read prefixes from /etc/kde<version>rc
+            // - fallback to /etc/kde<version>
+
+            QStringList kdeDirs;
+            const QString kdeHomePathVar = QFile::decodeName(qgetenv("KDEHOME"));
+            if (!kdeHomePathVar.isEmpty())
+                kdeDirs += kdeHomePathVar;
+
+            const QString kdeDirsVar = QFile::decodeName(qgetenv("KDEDIRS"));
+            if (!kdeDirsVar.isEmpty())
+                kdeDirs += kdeDirsVar.split(QLatin1Char(':'), QString::SkipEmptyParts);
+
+            const QString kdeVersionHomePath = QDir::homePath() + QStringLiteral("/.kde") + QLatin1String(kdeVersionBA);
+            if (QFileInfo(kdeVersionHomePath).isDir())
+                kdeDirs += kdeVersionHomePath;
+
+            const QString kdeHomePath = QDir::homePath() + QStringLiteral("/.kde");
+            if (QFileInfo(kdeHomePath).isDir())
+                kdeDirs += kdeHomePath;
+
+            const QString kdeRcPath = QStringLiteral("/etc/kde") + QLatin1String(kdeVersionBA) + QStringLiteral("rc");
+            if (QFileInfo(kdeRcPath).isReadable()) {
+                QSettings kdeSettings(kdeRcPath, QSettings::IniFormat);
+                kdeSettings.beginGroup(QStringLiteral("Directories-default"));
+                kdeDirs += kdeSettings.value(QStringLiteral("prefixes")).toStringList();
+            }
+
+            const QString kdeVersionPrefix = QStringLiteral("/etc/kde") + QLatin1String(kdeVersionBA);
+            if (QFileInfo(kdeVersionPrefix).isDir())
+                kdeDirs += kdeVersionPrefix;
+
+            kdeDirs.removeDuplicates();
+            if (!kdeDirs.isEmpty()) {
+                return new KdeAppMenuPlatformTheme(kdeDirs, kdeVersion);
+            }
+            else {
+                qWarning("%s: Unable to determine KDE dirs", Q_FUNC_INFO);
+                WARN << "Unable to determine KDE dirs, falling back to the gnome theme";
+            }
+#else
             const QString kdeHomePathVar = QString::fromLocal8Bit(qgetenv("KDEHOME"));
             if (!kdeHomePathVar.isEmpty())
                 return new KdeAppMenuPlatformTheme(kdeHomePathVar, kdeVersion);
@@ -349,15 +398,16 @@ AppMenuPlatformThemePlugin::create(const QString &key, const QStringList &paramL
             const QString kdeHomePath = QDir::homePath() + QStringLiteral("/.kde");
             if (QFileInfo(kdeHomePath).isDir())
                 return new KdeAppMenuPlatformTheme(kdeHomePath, kdeVersion);
-
-            WARN << "Unable to determine KDEHOME, falling back to the gnome theme";
+#endif // QT_VERSION_CHECK
         }
         else {
             WARN << "KDE version too old or cannot be properly identified, "
                 "falling back to the gnome theme";
-        }
+        }       
     }
-#endif
+#endif // QKDETHEME_STILL_PRIVATE
+
+    // Fallback path - use the Gnome theme in this case
     return new GnomeAppMenuPlatformTheme();
 }
 
