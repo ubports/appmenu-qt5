@@ -1,3 +1,12 @@
+appmenu-qt5 (0.3.0+15.04.20141126-0ubuntu1) vivid; urgency=low
+
+  [ Łukasz 'sil2100' Zemczak ]
+  * Change the way QKdeTheme is constructed to fit the way presented by
+    the new Qt 5.4.0 version. Make this change conditional so that it's
+    still buildable with earlier releases. (LP: #1394887)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 26 Nov 2014 10:36:43 +0000
+
 appmenu-qt5 (0.3.0+15.04.20141111-0ubuntu1) vivid; urgency=low
 
   [ Ubuntu daily release ]
