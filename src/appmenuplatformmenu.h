@@ -26,6 +26,7 @@ class AppMenuPlatformMenu : public QPlatformMenu
 {
     Q_OBJECT
     friend class AppMenuPlatformMenuItem;
+    friend class AppMenuPlatformSystemTrayIcon;
 
 public:
     AppMenuPlatformMenu();

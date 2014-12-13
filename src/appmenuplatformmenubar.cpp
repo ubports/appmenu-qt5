@@ -18,6 +18,7 @@
 
 #include "appmenuplatformmenubar.h"
 #include "appmenuplatformmenuitem.h"
+#include "appmenuplatformsystemtrayicon.h"
 #include "registrar_interface.h"
 
 // Ugly, but sadly we need to use private headers for desktop-theme related classes
@@ -249,6 +250,9 @@ public:
     }
     virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
+    virtual QPlatformSystemTrayIcon* createPlatformSystemTrayIcon() const {
+        return new AppMenuPlatformSystemTrayIcon();
+    }
 
     virtual QVariant themeHint(QPlatformTheme::ThemeHint hint) const;
 };
