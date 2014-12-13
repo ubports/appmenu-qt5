@@ -12,8 +12,12 @@ PKGCONFIG += dbusmenu-qt5 gtk+-2.0
 DESTDIR = ./
 
 HEADERS += \
+        appmenuplatformmenuitem.h \
+        appmenuplatformmenu.h \
         appmenuplatformmenubar.h
 
 SOURCES += \
+        appmenuplatformmenuitem.cpp \
+        appmenuplatformmenu.cpp \
         appmenuplatformmenubar.cpp
 
