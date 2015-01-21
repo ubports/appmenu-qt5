@@ -17,6 +17,8 @@
  */
 
 #include "appmenuplatformmenubar.h"
+#include "appmenuplatformmenuitem.h"
+#include "appmenuplatformsystemtrayicon.h"
 #include "registrar_interface.h"
 
 // Ugly, but sadly we need to use private headers for desktop-theme related classes
@@ -243,9 +245,14 @@ class GnomeAppMenuPlatformTheme : public QGnomeTheme
 {
 public:
     GnomeAppMenuPlatformTheme();
-    virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
+    virtual QPlatformMenuItem* createPlatformMenuItem() const {
+        return new AppMenuPlatformMenuItem();
+    }
     virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
+    virtual QPlatformSystemTrayIcon* createPlatformSystemTrayIcon() const {
+        return new AppMenuPlatformSystemTrayIcon();
+    }
 
     virtual QVariant themeHint(QPlatformTheme::ThemeHint hint) const;
 };
@@ -304,7 +311,9 @@ public:
     {
     }
 #endif
-    virtual QPlatformMenuItem* createPlatformMenuItem() const { return 0; }
+    virtual QPlatformMenuItem* createPlatformMenuItem() const {
+        return new AppMenuPlatformMenuItem();
+    }
     virtual QPlatformMenu* createPlatformMenu() const { return 0; }
     virtual QPlatformMenuBar* createPlatformMenuBar() const;
 };
