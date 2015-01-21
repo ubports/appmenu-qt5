@@ -1,3 +1,13 @@
+appmenu-qt5 (0.3.0+15.04.20150121-0ubuntu1) vivid; urgency=low
+
+  [ Dmitry Shachnev ]
+  * Drop useless Suggests on qtbase packages.
+  * Remove qt5-default build-dependency.
+  * Add implementations of QPlatformMenuItem, QPlatformMenu and
+    QPlatformSystemTrayIcon. (LP: #1209106)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 21 Jan 2015 17:14:36 +0000
+
 appmenu-qt5 (0.3.0+15.04.20141126-0ubuntu1) vivid; urgency=low
 
   [ Łukasz 'sil2100' Zemczak ]
