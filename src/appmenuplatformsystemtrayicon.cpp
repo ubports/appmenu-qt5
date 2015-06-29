@@ -33,24 +33,30 @@ static const char *NOTIFICATION_INTERFACE = "org.freedesktop.Notifications";
 static const char *NOTIFICATION_SERVICE   = "org.freedesktop.Notifications";
 static const char *NOTIFICATION_PATH      = "/org/freedesktop/Notifications";
 
+static const QString KDEItemFormat = QStringLiteral("org.kde.StatusNotifierItem-%1-%2");
+static int instanceCount = 0;
+
 static IconCache iconCache;
 
 AppMenuPlatformSystemTrayIcon::AppMenuPlatformSystemTrayIcon():
+    m_serviceName(KDEItemFormat.arg(QCoreApplication::applicationPid()).arg(++instanceCount)),
+    m_objectPath("/StatusNotifierItem"),
     m_sniAdaptor(new StatusNotifierItemAdaptor(this)),
     m_dbusMenuExporter(Q_NULLPTR)
 {
-    static int id = 1;
-    m_objectPath = QString("/org/kde/statusnotifieritem/%1").arg(id++);
-
     registerMetaTypes();
     QDBusConnection bus = QDBusConnection::sessionBus();
+    bus.registerService(m_serviceName);
     bus.registerObject(m_objectPath, this, QDBusConnection::ExportAdaptors);
     QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_INTERFACE);
-    snw.asyncCall("RegisterStatusNotifierItem", m_objectPath);
+    snw.asyncCall("RegisterStatusNotifierItem", m_serviceName);
 }
 
 AppMenuPlatformSystemTrayIcon::~AppMenuPlatformSystemTrayIcon()
 {
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    bus.unregisterObject(m_objectPath, QDBusConnection::UnregisterTree);
+    bus.unregisterService(m_serviceName);
     delete m_sniAdaptor;
 }
 

@@ -89,6 +89,7 @@ Q_SIGNALS:
     void NewToolTip();
 
 private:
+    QString m_serviceName;
     QString m_objectPath;
     QString m_status;
     QIcon m_icon;
