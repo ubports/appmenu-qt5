@@ -1,3 +1,10 @@
+appmenu-qt5 (0.3.0+15.10.20150903-0ubuntu1) wily; urgency=medium
+
+  [ Timo Jyrinki ]
+  * Build dep on libinput-dev for Qt 5.5. (LP: #1437192)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 03 Sep 2015 10:15:35 +0000
+
 appmenu-qt5 (0.3.0+15.10.20150722-0ubuntu1) wily; urgency=medium
 
   [ Dmitry Shachnev ]
