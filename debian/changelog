@@ -1,3 +1,9 @@
+appmenu-qt5 (0.3.0+16.04.20151130-0ubuntu1) xenial; urgency=medium
+
+  * No-change rebuild.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 30 Nov 2015 14:50:17 +0000
+
 appmenu-qt5 (0.3.0+15.10.20150903-0ubuntu1) wily; urgency=medium
 
   [ Timo Jyrinki ]
