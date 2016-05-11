@@ -95,6 +95,7 @@ private:
     QIcon m_icon;
     QString m_tooltip;
 
+    QDBusConnection m_connection;
     StatusNotifierItemAdaptor *m_sniAdaptor;
     DBusMenuExporter *m_dbusMenuExporter;
 };
