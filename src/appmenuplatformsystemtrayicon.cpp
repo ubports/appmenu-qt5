@@ -41,22 +41,21 @@ static IconCache iconCache;
 AppMenuPlatformSystemTrayIcon::AppMenuPlatformSystemTrayIcon():
     m_serviceName(KDEItemFormat.arg(QCoreApplication::applicationPid()).arg(++instanceCount)),
     m_objectPath("/StatusNotifierItem"),
+    m_connection(QDBusConnection::connectToBus(QDBusConnection::SessionBus, m_serviceName)),
     m_sniAdaptor(new StatusNotifierItemAdaptor(this)),
     m_dbusMenuExporter(Q_NULLPTR)
 {
     registerMetaTypes();
-    QDBusConnection bus = QDBusConnection::sessionBus();
-    bus.registerService(m_serviceName);
-    bus.registerObject(m_objectPath, this, QDBusConnection::ExportAdaptors);
+    m_connection.registerService(m_serviceName);
+    m_connection.registerObject(m_objectPath, this, QDBusConnection::ExportAdaptors);
     QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_INTERFACE);
     snw.asyncCall("RegisterStatusNotifierItem", m_serviceName);
 }
 
 AppMenuPlatformSystemTrayIcon::~AppMenuPlatformSystemTrayIcon()
 {
-    QDBusConnection bus = QDBusConnection::sessionBus();
-    bus.unregisterObject(m_objectPath, QDBusConnection::UnregisterTree);
-    bus.unregisterService(m_serviceName);
+    m_connection.unregisterObject(m_objectPath, QDBusConnection::UnregisterTree);
+    m_connection.unregisterService(m_serviceName);
     delete m_sniAdaptor;
 }
 
@@ -91,7 +90,7 @@ void AppMenuPlatformSystemTrayIcon::updateMenu(QPlatformMenu *menu)
 {
     QMenu *qMenu = qobject_cast<AppMenuPlatformMenu *>(menu)->m_menu;
     QString menuObjectPath = m_objectPath + QStringLiteral("/menu");
-    m_dbusMenuExporter = new DBusMenuExporter(menuObjectPath, qMenu);
+    m_dbusMenuExporter = new DBusMenuExporter(menuObjectPath, qMenu, m_connection);
 }
 
 QRect AppMenuPlatformSystemTrayIcon::geometry() const
