@@ -1,3 +1,10 @@
+appmenu-qt5 (0.3.0+16.10.20160628.1-0ubuntu1) yakkety; urgency=medium
+
+  * Fix for creating two or more system tray icons. (LP: #1573639,
+    #1574699)
+
+ -- Dmitry Shachnev <mitya57@ubuntu.com>  Tue, 28 Jun 2016 10:48:58 +0000
+
 appmenu-qt5 (0.3.0+16.04.20151130-0ubuntu1) xenial; urgency=medium
 
   * No-change rebuild.
