@@ -66,7 +66,13 @@ QString IconCache::themePath(const QIcon &icon)
     }
 
     if (!icon.isNull() && !icon.name().isEmpty() && QIcon::hasThemeIcon(icon.name())) {
-        return QDir::cleanPath(QDir::homePath() + "/.local/share/icons");
+        QString dataHome = QString::fromUtf8(getenv("XDG_DATA_HOME"));
+
+        if (dataHome.isEmpty()) {
+            dataHome = QDir::homePath() + "/.local/share";
+        }
+
+        return QDir::cleanPath(dataHome + "/icons");
     }
 
     return m_temporaryDir->path();
