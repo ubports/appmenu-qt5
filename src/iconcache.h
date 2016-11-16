@@ -39,7 +39,7 @@ public:
 
     static const int MaxIconCount;
 
-    QString themePath();
+    QString themePath(const QIcon &icon = QIcon());
     QString nameForIcon(const QIcon &icon);
 
 private:

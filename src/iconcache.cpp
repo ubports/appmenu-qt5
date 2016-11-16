@@ -40,7 +40,7 @@ IconCache::~IconCache()
     }
 }
 
-QString IconCache::themePath()
+QString IconCache::themePath(const QIcon &icon)
 {
     if (!m_temporaryDir) {
         QString dir;
@@ -63,6 +63,10 @@ QString IconCache::themePath()
 
         QString path = dir + QStringLiteral("/qt-tray-iconcache-XXXXXX");
         m_temporaryDir = new QTemporaryDir(path);
+    }
+
+    if (!icon.isNull() && !icon.name().isEmpty() && QIcon::hasThemeIcon(icon.name())) {
+        return QDir::cleanPath(QDir::homePath() + "/.local/share/icons");
     }
 
     return m_temporaryDir->path();

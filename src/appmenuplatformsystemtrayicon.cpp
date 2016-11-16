@@ -181,7 +181,7 @@ QString AppMenuPlatformSystemTrayIcon::status() const
 
 QString AppMenuPlatformSystemTrayIcon::iconThemePath() const
 {
-    return iconCache.themePath();
+    return iconCache.themePath(m_icon);
 }
 
 QString AppMenuPlatformSystemTrayIcon::iconName() const
