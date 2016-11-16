@@ -43,9 +43,28 @@ IconCache::~IconCache()
 QString IconCache::themePath()
 {
     if (!m_temporaryDir) {
-        QString path = QDir::tempPath() + QStringLiteral("/iconcache-XXXXXX");
+        QString dir;
+
+        if (!getenv("SNAP")) {
+            dir = QDir::tempPath();
+        } else {
+            // Try to get the .cache from $XDG_CACHE_HOME, if it's not set,
+            // it has to be in ~/.cache as per XDG standard
+            dir = QString::fromUtf8(getenv("XDG_CACHE_HOME"));
+            if (dir.isEmpty()) {
+                dir = QDir::cleanPath(QDir::homePath() + QStringLiteral("/.cache"));
+            }
+
+            QDir d(dir);
+            if (!d.exists()) {
+                d.mkpath(".");
+            }
+        }
+
+        QString path = dir + QStringLiteral("/qt-tray-iconcache-XXXXXX");
         m_temporaryDir = new QTemporaryDir(path);
     }
+
     return m_temporaryDir->path();
 }
 
