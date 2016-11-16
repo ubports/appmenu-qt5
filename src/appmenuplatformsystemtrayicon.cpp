@@ -21,6 +21,7 @@
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusconnectioninterface.h>
 #include <QtDBus/qdbusinterface.h>
+#include <QX11Info>
 #include "appmenuplatformmenu.h"
 #include "appmenuplatformsystemtrayicon.h"
 #include "iconcache.h"
@@ -223,6 +224,11 @@ void AppMenuPlatformSystemTrayIcon::Activate(int x, int y)
 {
     Q_UNUSED(x);
     Q_UNUSED(y);
+    // Workarounds LP: #627195
+    if (QX11Info::isPlatformX11() &&
+        QString::fromUtf8(getenv("XDG_CURRENT_DESKTOP")).split(':').contains("Unity")) {
+        QX11Info::setAppUserTime(0);
+    }
     emit activated(Trigger);
 }
 
