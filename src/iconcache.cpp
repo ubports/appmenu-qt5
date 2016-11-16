@@ -29,8 +29,7 @@ const int IconCache::MaxIconCount = 20;
 
 IconCache::IconCache(QObject *parent):
     QObject(parent),
-    m_temporaryDir(Q_NULLPTR),
-    m_initialized(false)
+    m_temporaryDir(Q_NULLPTR)
 {
 }
 
@@ -43,10 +42,9 @@ IconCache::~IconCache()
 
 QString IconCache::themePath()
 {
-    if (!m_initialized) {
+    if (!m_temporaryDir) {
         QString path = QDir::tempPath() + QStringLiteral("/iconcache-XXXXXX");
         m_temporaryDir = new QTemporaryDir(path);
-        m_initialized = true;
     }
     return m_temporaryDir->path();
 }

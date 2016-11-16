@@ -45,7 +45,6 @@ public:
 private:
     QTemporaryDir *m_temporaryDir;
     mutable QList<qint64> m_cacheKeys;
-    bool m_initialized;
 
     void cacheIcon(qint64 key, const QIcon &);
     void trimCache();
