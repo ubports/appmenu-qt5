@@ -35,6 +35,7 @@
 #include <QDebug>
 #include <QList>
 #include <QVariant>
+#include <QX11Info>
 
 #undef signals // Needed to make sure we can include gtk.h
 #include <gtk/gtk.h>
@@ -229,6 +230,10 @@ MenuBarAdapter::resetRegisteredWinId()
 /* Helper function, as copy-pasted from Qt 5.2.1 gtk2 platformthemeplugin */
 static QString gtkSetting(const gchar *propertyName)
 {
+    if (!QX11Info::isPlatformX11()) {
+        return QString();
+    }
+
     GtkSettings *settings = gtk_settings_get_default();
     gchararray value;
     g_object_get(settings, propertyName, &value, NULL);
@@ -261,13 +266,19 @@ public:
 GnomeAppMenuPlatformTheme::GnomeAppMenuPlatformTheme()
     : QGnomeTheme()
 {
-    int (*oldErrorHandler)(Display *, XErrorEvent *) = XSetErrorHandler(NULL);
-    gtk_init(0, 0);
-    XSetErrorHandler(oldErrorHandler);
+    if (QX11Info::isPlatformX11()) {
+        int (*oldErrorHandler)(Display *, XErrorEvent *) = XSetErrorHandler(NULL);
+        gtk_init(0, 0);
+        XSetErrorHandler(oldErrorHandler);
+    }
 }
 
 QVariant GnomeAppMenuPlatformTheme::themeHint(QPlatformTheme::ThemeHint hint) const
 {
+    if (!QX11Info::isPlatformX11()) {
+        return QVariant(QVariant::String);
+    }
+
     switch (hint) {
         case QPlatformTheme::SystemIconThemeName:
             return QVariant(gtkSetting("gtk-icon-theme-name"));
