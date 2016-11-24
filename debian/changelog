@@ -1,3 +1,14 @@
+appmenu-qt5 (0.3.0+17.04.20161124.2-0ubuntu1) zesty; urgency=medium
+
+  * AppMenuPlatformSystemTrayIcon: reset app usertime on activation to
+    ensure compiz will raise it (LP: #627195)
+  * AppMenuPlatformMenuBar: Don't initialize X11 related functions in
+    other environments (LP: #1606246)
+  * IconCache: get the proper theme path based on the fact we're using a
+    themed icon or not (LP: #1600136)
+
+ -- Marco Trevisan (Treviño) <mail@3v1n0.net>  Thu, 24 Nov 2016 18:39:00 +0000
+
 appmenu-qt5 (0.3.0+16.10.20160628.1-0ubuntu2~1) yakkety; urgency=medium
 
   * Rebuild against Qt 5.6.
