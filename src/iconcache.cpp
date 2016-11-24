@@ -29,8 +29,7 @@ const int IconCache::MaxIconCount = 20;
 
 IconCache::IconCache(QObject *parent):
     QObject(parent),
-    m_temporaryDir(Q_NULLPTR),
-    m_initialized(false)
+    m_temporaryDir(Q_NULLPTR)
 {
 }
 
@@ -41,13 +40,41 @@ IconCache::~IconCache()
     }
 }
 
-QString IconCache::themePath()
+QString IconCache::themePath(const QIcon &icon)
 {
-    if (!m_initialized) {
-        QString path = QDir::tempPath() + QStringLiteral("/iconcache-XXXXXX");
+    if (!m_temporaryDir) {
+        QString dir;
+
+        if (!getenv("SNAP")) {
+            dir = QDir::tempPath();
+        } else {
+            // Try to get the .cache from $XDG_CACHE_HOME, if it's not set,
+            // it has to be in ~/.cache as per XDG standard
+            dir = QString::fromUtf8(getenv("XDG_CACHE_HOME"));
+            if (dir.isEmpty()) {
+                dir = QDir::cleanPath(QDir::homePath() + QStringLiteral("/.cache"));
+            }
+
+            QDir d(dir);
+            if (!d.exists()) {
+                d.mkpath(".");
+            }
+        }
+
+        QString path = dir + QStringLiteral("/qt-tray-iconcache-XXXXXX");
         m_temporaryDir = new QTemporaryDir(path);
-        m_initialized = true;
     }
+
+    if (!icon.isNull() && !icon.name().isEmpty() && QIcon::hasThemeIcon(icon.name())) {
+        QString dataHome = QString::fromUtf8(getenv("XDG_DATA_HOME"));
+
+        if (dataHome.isEmpty()) {
+            dataHome = QDir::homePath() + "/.local/share";
+        }
+
+        return QDir::cleanPath(dataHome + "/icons");
+    }
+
     return m_temporaryDir->path();
 }
 

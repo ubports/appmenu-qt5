@@ -39,13 +39,12 @@ public:
 
     static const int MaxIconCount;
 
-    QString themePath();
+    QString themePath(const QIcon &icon = QIcon());
     QString nameForIcon(const QIcon &icon);
 
 private:
     QTemporaryDir *m_temporaryDir;
     mutable QList<qint64> m_cacheKeys;
-    bool m_initialized;
 
     void cacheIcon(qint64 key, const QIcon &);
     void trimCache();
