@@ -1,3 +1,9 @@
+appmenu-qt5 (0.3.0+17.04.20161124.2-0ubuntu2~1) zesty; urgency=medium
+
+  * No change rebuild
+
+ -- Timo Jyrinki <timo-jyrinki@ubuntu.com>  Wed, 04 Jan 2017 09:03:40 +0200
+
 appmenu-qt5 (0.3.0+17.04.20161124.2-0ubuntu1) zesty; urgency=medium
 
   * AppMenuPlatformSystemTrayIcon: reset app usertime on activation to
