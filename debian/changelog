@@ -1,3 +1,10 @@
+appmenu-qt5 (0.3.0+17.04.20170112-0ubuntu1) zesty; urgency=medium
+
+  * IconCache: use $XDG_RUNTIME_DIR as preferred place where to save
+    icons
+
+ -- Marco Trevisan (Treviño) <mail@3v1n0.net>  Thu, 12 Jan 2017 17:13:05 +0000
+
 appmenu-qt5 (0.3.0+17.04.20161124.2-0ubuntu2~1) zesty; urgency=medium
 
   * No change rebuild
