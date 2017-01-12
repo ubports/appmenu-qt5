@@ -44,8 +44,15 @@ QString IconCache::themePath(const QIcon &icon)
 {
     if (!m_temporaryDir) {
         QString dir;
+        QString runtimeDir = QString::fromUtf8(getenv("XDG_RUNTIME_DIR"));
 
-        if (!getenv("SNAP")) {
+        if (!runtimeDir.isEmpty()) {
+            dir = runtimeDir;
+            QDir d(dir);
+            if (!d.exists()) {
+                d.mkpath(".");
+            }
+        } else if (!getenv("SNAP")) {
             dir = QDir::tempPath();
         } else {
             // Try to get the .cache from $XDG_CACHE_HOME, if it's not set,
