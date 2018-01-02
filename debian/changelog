@@ -1,3 +1,9 @@
+appmenu-qt5 (0.3.2+ubports) xenial; urgency=medium
+
+  * Imported to UBports
+
+ -- UBports auto importer <infra@ubports.com>  Tue, 02 Jan 2018 15:03:39 +0100
+
 appmenu-qt5 (0.3.1+17.04.20170216-0ubuntu1) zesty; urgency=medium
 
   * No change-rebuild to push to xenial+overlay (need to bump version too)
