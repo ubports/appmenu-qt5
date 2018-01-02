@@ -22,7 +22,7 @@
 #include "registrar_interface.h"
 
 // Ugly, but sadly we need to use private headers for desktop-theme related classes
-#include <private/qgenericunixthemes_p.h>
+#include <QtThemeSupport/private/qgenericunixthemes_p.h>
 
 #include <dbusmenuexporter.h>
 
